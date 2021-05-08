@@ -1,9 +1,32 @@
-using _131241;
+//using _131241;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-internal class Program : MetalEvent
+
+
+public class MetalEvent
+{
+    private DateTime date;
+    private double coefficient;
+
+    public MetalEvent(string eventName, string band, DateTime date, double price, double coefficient)
+    {
+        EventName = eventName;
+        Band = band;
+        this.date = date;
+        Price = price;
+        this.coefficient = coefficient;
+    }
+
+				public string EventName { get; set; }
+				public string Band { get; set; }
+				public string Date { get; set; }
+				public double Price { get; set; }
+				public object HeavyCoefficient { get; set; }
+
+}
+internal class Program
 {
 	public static void Main(string[] args)
 	{
@@ -11,6 +34,7 @@ internal class Program : MetalEvent
 		>();
 		Dictionary<string, MetalEvent> events = new Dictionary<string, MetalEvent>
 			();
+		
 
 		string command = "";
 		do
@@ -27,10 +51,15 @@ internal class Program : MetalEvent
 
 					if (!heavyCoefficient.ContainsKey(bandData[0]))
 					{
-						heavyCoefficient.Add(bandData[0], bandData[1]
+						heavyCoefficient.Add(bandData[0], double.Parse(bandData[1])
 						);
 					}
+
+
 					break;
+
+
+
 				case "AddEvent":
 					commandDataFull = string.Join(" ", commandData.Skip(1).ToArray());
 
@@ -40,8 +69,9 @@ internal class Program : MetalEvent
 					string dateString = eventData[2];
 					string[] dateComponents = dateString.Split('/');
 					int day = int.Parse(dateComponents[0]); int month = int.Parse(dateComponents[1]); int year = int.Parse(dateComponents[2]);
-					DateTime date = new DateTime(year, month, day); double price = double.Parse(eventData[3]); double coefficient = double.MinValue; coefficient = heavyCoefficient[band]; events.Add(band,eventName, band, date, price, coefficient);
-
+					DateTime date = new DateTime(year, month, day); double price = double.Parse(eventData[3]); double coefficient = double.MinValue; coefficient = heavyCoefficient[band]; events.Add(band, new MetalEvent(
+					eventName, band, date, price, coefficient
+				));
 
 
 					break;
@@ -72,8 +102,7 @@ internal class Program : MetalEvent
 					foreach (var item in heavyEvents)
 					{
                         Console.WriteLine($"{item.Value.EventName}|{item.Value.Band}|{item.Value.Date:dd/MM/yy}|{ item.Value.Price}");
-
-						//|{ item.Value.Price });
+						
 					}
 					break;
 
@@ -97,12 +126,12 @@ internal class Program : MetalEvent
 						Console.WriteLine($"{item.Value.EventName}|{item.Value.Band}|{item.Value.Date:dd/MM/yy}|{item.Value.Price}");
 					}
 					break;
-				//default;
+				
 			}
 			//skip invalid commands break;
 
 			command = Console.ReadLine();
-		} while (command == "END");
+		} while (command != "END");
 
 	}
 }
